@@ -1,0 +1,83 @@
+<html>
+<head>
+    <style>
+        .colored_file_name{
+            color:blue;
+        }
+        .added_line{
+            color:#005cc7;
+            background-color: #e6ffed;
+
+        }
+        .removed_line{
+            color:#005cc7;
+            background-color: #ffeef0;
+        }
+        .file-header {
+            padding: 5px 10px;
+            background-color: #fafbfc;
+            border-bottom: 1px solid #e1e4e8;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+        .file-complete-body {
+            border-radius: 25px;
+            border: 2px solid #DDDDDD;
+            padding: 20px;
+        }
+
+        #top{
+            color: white;
+            background-color: slategray;
+            position:absolute;
+            top:0px; left:0px;
+            right:0px;
+            overflow:hidden;
+            height: 20%;
+        }
+        .bottom{
+            position:absolute; 
+            top:25%;
+            bottom:200px;
+            left:0px; right:0px;
+            overflow:auto;
+            bottom: 0;
+        }  
+
+    </style>
+</head>
+
+{% if file_data %}
+    <div id="top">
+    {% for i in file_data %}
+        <a href="#{{ i.file_name.rstrip() | safe }}_section">
+            <li class="colored_file_name">{{ i.file_name | safe }}</li>
+        </a>
+    {% endfor %}
+    </div>
+
+    <div class="bottom">
+    {% for i in file_data %}
+        <div class="file-complete-body" id="{{ i.file_name.rstrip() | safe }}_section">
+            <div class="file-header">
+                <pre>{{ i.file_name | safe }}</pre>
+            </div>
+            <div class="file-body">
+                {% for line in i.diff_file_data %}
+                    {% if line.startswith('+') %}
+                    <pre class="added_line">{{ line | safe }}</pre>
+                    {% elif line.startswith('-') %}
+                        <pre class="removed_line">{{ line | safe }}</pre>
+                    {% else %}
+                        <pre>{{ line.rstrip() | safe }}</pre>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+
+    {% endfor %}
+    </div>
+{% endif %}
+</body>
+</html>
